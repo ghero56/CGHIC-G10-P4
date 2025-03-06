@@ -33,6 +33,8 @@ float	movX = 0.0f,
 		movY = 0.0f,
 		movZ = -5.0f;
 
+float angX = 0.0f, angY = 0.0f, angZ = 0.0f;
+
 void getResolution()
 {
 	const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -170,6 +172,9 @@ int main()
 		//Use "view" in order to affect all models
 		viewOp = glm::translate(glm::mat4(1.0f), glm::vec3(movX, movY, movZ));
 		viewOp = glm::rotate(viewOp, glm::radians(angX), glm::vec3(1.0f,0.0f,0.0f));
+		viewOp = glm::rotate(viewOp, glm::radians(angY), glm::vec3(0.0f, 1.0f, 0.0f));
+		viewOp = glm::rotate(viewOp, glm::radians(angZ), glm::vec3(0.0f, 0.0f, 1.0f));
+
 		// pass them to the shaders
 		myShader.setMat4("model", modelOp);
 		myShader.setMat4("view", viewOp);
@@ -200,7 +205,7 @@ int main()
 // ---------------------------------------------------------------------------------------------------------
 void my_input(GLFWwindow *window)
 {
-	float speed = 0.01;
+	float speed = 0.1;
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)  //GLFW_RELEASE
         glfwSetWindowShouldClose(window, true);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
@@ -215,6 +220,18 @@ void my_input(GLFWwindow *window)
 		movZ -= 0.08f * speed;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		movZ += 0.08f * speed;
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+		angX -= speed;
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+		angX += speed;
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+		angY -= speed;
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+		angY += speed;
+	if (glfwGetKey(window, GLFW_KEY_HOME) == GLFW_PRESS)
+		angZ -= speed;
+	if (glfwGetKey(window, GLFW_KEY_END) == GLFW_PRESS)
+		angZ += speed;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
