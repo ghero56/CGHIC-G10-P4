@@ -150,6 +150,11 @@ int main()
 	glm::mat4 viewOp = glm::mat4(1.0f);			//Use this matrix for ALL models
 	glm::mat4 projectionOp = glm::mat4(1.0f);	//This matrix is for Projection
 
+	glm::mat4 tempPecho = glm::mat4(1.0f);
+	glm::mat4 tempBrazo = glm::mat4(1.0f);
+	glm::mat4 tempPierna = glm::mat4(1.0f);
+
+
 	//Use "projection" in order to change how we see the information
 	projectionOp = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
@@ -171,7 +176,7 @@ int main()
 		glm::mat4 modelOp = glm::mat4(1.0f);		// initialize Matrix, Use this matrix for individual models
 		//Use "view" in order to affect all models
 		viewOp = glm::translate(glm::mat4(1.0f), glm::vec3(movX, movY, movZ));
-		viewOp = glm::rotate(viewOp, glm::radians(angX), glm::vec3(1.0f,0.0f,0.0f));
+		viewOp = glm::rotate(viewOp, glm::radians(angX), glm::vec3(1.0f, 0.0f, 0.0f));
 		viewOp = glm::rotate(viewOp, glm::radians(angY), glm::vec3(0.0f, 1.0f, 0.0f));
 		viewOp = glm::rotate(viewOp, glm::radians(angZ), glm::vec3(0.0f, 0.0f, 1.0f));
 
@@ -182,12 +187,76 @@ int main()
 
 		//Model
 		glBindVertexArray(VAO);
-		myShader.setVec3("aColor", glm::vec3(1.0f, 0.0f, 1.0f));
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-
+		
 		// modelado
 
+		// pecho como lugar inicial geométrico
+		tempPecho = modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 3.5f, 0.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(5.0f, 6.0f, 1.0f));
+		myShader.setVec3("aColor", glm::vec3(1.0f, 0.0f, 1.0f));
+		myShader.setMat4("model", modelOp);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
+		// desde el pecho -> cuello
+		modelOp = tempPecho;
+		modelOp = glm::translate(modelOp, glm::vec3(0.0f, 3.25f, 0.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(0.5f, 0.5f, 1.0f));
+		myShader.setVec3("aColor", glm::vec3(1.0f, 0.0f, 0.0f));
+		myShader.setMat4("model", modelOp);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		// desde el origen -> cabeza
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 8.25f, 0.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(1.5f, 2.5f, 1.0f));
+		myShader.setVec3("aColor", glm::vec3(0.0f, 1.0f, 0.0f));
+		myShader.setMat4("model", modelOp);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(5.0f, 1.f, 1.0f));
+		myShader.setVec3("aColor", glm::vec3(0.0f, 1.0f, 1.0f));
+		myShader.setMat4("model", modelOp);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		
+		int negativo = -1;
+		for (size_t i = 0; i < 2; i++) {
+			modelOp = tempPecho;
+			modelOp = glm::translate(modelOp, glm::vec3(negativo * -3.25f, 2.5f, 0.0f));
+			tempBrazo = modelOp;
+			modelOp = glm::scale(modelOp, glm::vec3(1.5f, 1.f, 1.0f));
+			myShader.setVec3("aColor", glm::vec3(0.0f, 1.0f, 1.0f));
+			myShader.setMat4("model", modelOp);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+
+			modelOp = tempBrazo;
+			modelOp = glm::translate(modelOp, glm::vec3(negativo * -0.25f, -2.25f, 0.0f));
+			tempBrazo = modelOp;
+			modelOp = glm::scale(modelOp, glm::vec3(1.f, 4.5f, 1.0f));
+			myShader.setVec3("aColor", glm::vec3(0.0f, 1.0f, 1.0f));
+			myShader.setMat4("model", modelOp);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+			negativo *= negativo;
+		}
+
+		negativo = -1;
+		for (size_t i = 0; i < 2; i++) {
+			modelOp = glm::mat4(1.0f);
+			modelOp = glm::translate(modelOp, glm::vec3(negativo * 1.75f, -2.25f, 0.0f));
+			tempPierna = modelOp;
+			modelOp = glm::scale(modelOp, glm::vec3(1.5f, 3.5f, 1.0f));
+			myShader.setVec3("aColor", glm::vec3(0.0f, 0.0f, 1.0f));
+			myShader.setMat4("model", modelOp);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+
+			modelOp = tempPierna;
+			modelOp = glm::translate(modelOp, glm::vec3(negativo * 0.5f, -2.15f, 0.0f));
+			tempPierna = modelOp;
+			modelOp = glm::scale(modelOp, glm::vec3(2.5f, 0.8f, 1.0f));
+			myShader.setMat4("model", modelOp);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+			negativo *= -1;
+		}
+		
 		glBindVertexArray(0);
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
